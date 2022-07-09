@@ -1,39 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe Post, type: :model do
-  poster = Post.new(author_id: 1, title: 'My first post', text: 'This is my first post', comment_counter: 12,
-                    likes_counter: 9)
+  it 'Post should not be valid without valid attributes' do
+    expect(Post.new).to_not be_valid
+  end
 
-  before { poster.save }
-  it 'is valid with valid attributes' do
-    expect(poster).to_not be_valid
+  it 'Post title should not be empty' do
+    post = Post.new(title: nil)
+    expect(post).to_not be_valid
   end
-  it 'is not valid without an author_id' do
-    poster.author_id = nil
-    expect(poster).to_not be_valid
+
+  it 'Post comment counter should not be a nil' do
+    post = Post.new(comments_counter: nil)
+    expect(post).to_not be_valid
   end
-  it 'is not valid without a title' do
-    poster.title = nil
-    expect(poster).to_not be_valid
+
+  it 'Post comment counter should not be a string' do
+    post = Post.new(comments_counter: 'one')
+    expect(post).to_not be_valid
   end
-  it 'is not valid without a text' do
-    poster.text = nil
-    expect(poster).to_not be_valid
+
+  it 'Likes comment counter should not be a nil' do
+    post = Post.new(likes_counter: nil)
+    expect(post).to_not be_valid
   end
-  it 'is not valid without a comment_counter' do
-    poster.comment_counter = nil
-    expect(poster).to_not be_valid
+
+  it 'Likes comment counter should not be a string' do
+    post = Post.new(likes_counter: 'one')
+    expect(post).to_not be_valid
   end
-  it 'is not valid without a likes_counter' do
-    poster.likes_counter = nil
-    expect(poster).to_not be_valid
-  end
-  it 'is not valid with a comment_counter less than 0' do
-    poster.comment_counter = -1
-    expect(poster).to_not be_valid
-  end
-  it 'is not valid with a likes_counter less than 0' do
-    poster.likes_counter = -1
-    expect(poster).to_not be_valid
+
+  it 'Most recent comments returns most recent 5 comments' do
+    comment = Post.most_recent_comments.length
+    expect(comment).to be <= 5
   end
 end
